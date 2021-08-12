@@ -1,0 +1,141 @@
+{% extends "base/_MainLayout.html" %}
+{% load static %}
+{% load render_partial %}
+{% block title %}
+    Cart
+{% endblock %}
+{% block content %}
+    {% render_partial "header" %}
+    <!-- ****** Cart Area Start ****** -->
+    <div class="cart_area section_padding_100 clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div style="width: 100%" class="cart-table clearfix">
+                        {% if orders %}
+                            <table class="table table-responsive" style="width: 100%">
+                                <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Size</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <form action="/cart" method="post">
+                                    {% csrf_token %}
+                                    {% for order in orders %}
+                                        <tr>
+                                            <td class="cart_product_img d-flex align-items-center">
+                                                <a href="/shop/{{ order.products.get_absolute_url }}"><img
+                                                        src="{{ order.products.image1.url }}"
+                                                        alt="Product"></a>
+                                                <h6>{{ order.products.title }}</h6>
+                                            </td>
+                                            <td class="price"><span>$ {{ order.products.price_after_off }}</span></td>
+                                            <td><span>{{ order.size }}</span></td>
+                                            <td class="qty">
+                                                <div class="quantity">
+                                                    <span style="border: none" class="qty-minus"
+                                                          onclick="if (document.getElementById('qty_{{ order.products.title }}').value <= {{ order.products.count }}){var effect = document.getElementById('qty_{{ order.products.title }}'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;}else if (document.getElementById('qty_{{ order.products.title }}').value > {{ order.products.count }}){
+                                                                  document.getElementById('qty_{{ order.products.title }}').value = {{ order.products.count }}
+                                                                  }"
+                                                    >
+                                                        <i
+                                                                class="fa fa-minus" aria-hidden="true"></i></span>
+                                                    <input readonly
+                                                           onchange="if(this.value > {{ order.products.count }}){this.value = {{ order.products.count }}"
+                                                           type="number" class="qty-text"
+                                                           id="qty_{{ order.products.title }}" step="1" min="1"
+                                                           max="{{ order.products.count }}"
+                                                           name="quantity_{{ order.products.title }}_{{ order.id }}"
+                                                           value="{{ order.count }}">
+                                                    <span style="border: none" class="qty-plus"
+                                                          onclick="if (document.getElementById('qty_{{ order.products.title }}').value < {{ order.products.count }}){var effect = document.getElementById('qty_{{ order.products.title }}'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;}else{
+                                                                  document.getElementById('qty_{{ order.products.title }}').value = {{ order.products.count }}
+                                                                  }">
+                                                        <i
+                                                                class="fa fa-plus" aria-hidden="true"></i></span>
+                                                </div>
+                                            </td>
+                                            <td class="total_price"><span>$ <span
+                                                    id="tp_{{ order.id }}">{{ order.final_price }}</span></span></td>
+                                            <td><a href="/cart/deleteitem/{{ order.products.id }}"><i class="fa fa-minus"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    <div class="cart-footer d-flex mt-30">
+                                        <div class="update-checkout w-50 text-right">
+                                            <a href="/cart/clear_list">clear cart</a>
+                                        </div>
+                                        <div style="margin-left: 5px ;width: 50%!important">
+                                            <input class="btn btn-primary" type="submit" value="Update List">
+                                        </div>
+                                    </div>
+                                </form>
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <div class="d-flex justify-content-center">
+                                <span class="badge badge-info">There is Nothing here yet</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="coupon-code-area mt-70">
+                        <div class="cart-page-heading">
+                            <h5>Cupon code</h5>
+                            <p>Enter your Coupon code</p>
+                        </div>
+                        <form action="/cart" method="post">
+                            {% csrf_token %}
+                            <input type="search" name="coupon" placeholder="Coupon">
+                            <button type="submit">Apply</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                    <div class="cart-total-area mt-70">
+                        <div class="cart-page-heading">
+                            <h5>Cart total</h5>
+                            <p>Final info</p>
+                        </div>
+
+                        <ul class="cart-total-chart">
+                            <li><span>Subtotal</span> <span>${{ order_price }}</span></li>
+                            {% if order_price > 1000 %}
+
+                                <li><span>Shipping</span> <span>{{ shipping_price }}</span></li>
+                            {% else %}
+                                <li><span>Shipping</span> <span>${{ shipping_price }}</span></li>
+                            {% endif %}
+                            <li><span><strong>Total</strong></span> <span><strong>${{ all_price }}</strong></span></li>
+                        </ul>
+                        <a href="/payment" class="btn karl-checkout-btn">Proceed to checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ****** Cart Area End ****** -->
+    {% render_partial "footer" %}
+{% endblock %}
+{% block script %}
+    {% for order in orders %}
+        <script>
+            function fun{{ order.id }}() {
+                let quantity = document.getElementById('qty_{{ order.id }}').value
+                console.log(quantity)
+                document.getElementById('tp_{{ order.id }}').innerHTML = parseInt(quantity) * parseInt({{ order.products.price_after_off }})
+            }
+        </script>
+    {% endfor %}
+{% endblock %}

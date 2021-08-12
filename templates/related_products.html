@@ -1,0 +1,46 @@
+{% load static %}
+<section class="you_may_like_area clearfix">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section_heading text-center">
+                    <h2>related Products</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% for i in items %}
+                <div class="col-12">
+                    <div class="you_make_like_slider owl-carousel">
+
+                        {% for item in i %}
+                            <!-- Single gallery Item -->
+                            <div class="single_gallery_item">
+                                <!-- Product Image -->
+                                <div style="height: 460px" class="product-img">
+                                    <a href="/shop/{{ item.get_absolute_url }}"><img src="{{ item.image1.url }}" alt=""></a>
+                                </div>
+                                <!-- Product Description -->
+                                <div class="product-description">
+                                    {% if item.is_available == 1 %}
+                                        {% if item.off_percentage > 0 %}
+                                            <h4 class="product-price"><strike>${{ item.price }}</strike> | OFF</h4>
+                                        {% else %}
+                                            <h4 class="product-price">${{ item.price }}</h4>
+                                        {% endif %}
+                                    {% else %}
+                                        <h4 class="product-price text-danger">Not in Stock</h4>
+                                    {% endif %}
+                                    <p>{{ item.title }}</p>
+                                    <!-- Add to Cart -->
+                                    <a href="#" class="add-to-cart-btn">ADD TO CART</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

@@ -1,0 +1,203 @@
+{% extends "base/_MainLayout.html" %}
+{% load render_partial %}
+{% block title %}
+    Shop
+{% endblock %}
+{% block content %}
+    <div id="wrapper">
+
+        <!-- ****** Header Area Start ****** -->
+        {% render_partial "header" %}
+        <!-- ****** Header Area End ****** -->
+
+        <!-- ****** Quick View Modal Area Start ****** -->
+        {#        <div class="modal fade" id="quickview" tabindex="-1" role="dialog"#}
+        {#             aria-labelledby="quickview"#}
+        {#             aria-hidden="true">#}
+        {#            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">#}
+        {#                <div class="modal-content">#}
+        {#                    <button type="button" class="close btn" data-dismiss="modal"#}
+        {#                            aria-label="Close">#}
+        {#                        <span aria-hidden="true">×</span>#}
+        {#                    </button>#}
+        {##}
+        {#                    <div class="modal-body">#}
+        {#                        <div class="quickview_body">#}
+        {#                            <div class="container">#}
+        {#                                <div class="row">#}
+        {#                                    <div class="col-12 col-lg-5">#}
+        {#                                        <div class="quickview_pro_img">#}
+        {#                                            <img src="{{ product.image1.url }}" alt="">#}
+        {#                                        </div>#}
+        {#                                    </div>#}
+        {#                                    <div class="col-12 col-lg-7">#}
+        {#                                        <div class="quickview_pro_des">#}
+        {#                                            <h4 class="title">{{ product.title }}</h4>#}
+        {#                                            <h5 class="price">{{ product.price }}</h5>#}
+        {#                                            <p>{{ product.information }}</p>#}
+        {#                                            <a href="{{ product.get_absolute_url }}">View Full Product Details</a>#}
+        {#                                        </div>#}
+        {#                                        <!-- Add to Cart Form -->#}
+        {#                                        <form class="cart" method="post">#}
+        {#                                            <div class="quantity">#}
+        {#                                                <span class="qty-minus"#}
+        {#                                                      onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty > 1 ) effect.value--;return false;"><i#}
+        {#                                                        class="fa fa-minus" aria-hidden="true"></i></span>#}
+        {##}
+        {#                                                <input type="number" class="qty-text"#}
+        {#                                                       id="qty" step="1" min="1" max="12"#}
+        {#                                                       name="quantity" value="1">#}
+        {##}
+        {#                                                <span class="qty-plus"#}
+        {#                                                      onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i#}
+        {#                                                        class="fa fa-plus"#}
+        {#                                                        aria-hidden="true"></i></span>#}
+        {#                                            </div>#}
+        {#                                            <button type="submit" name="addtocart" value="5"#}
+        {#                                                    class="cart-submit">Add to#}
+        {#                                                cart#}
+        {#                                            </button>#}
+        {#                                            <!-- Wishlist -->#}
+        {#                                            <div class="modal_pro_wishlist">#}
+        {#                                                <a href="wishlist.html" target="_blank"><i#}
+        {#                                                        class="ti-heart"></i></a>#}
+        {#                                            </div>#}
+        {#                                            <!-- Compare -->#}
+        {#                                            <div class="modal_pro_compare">#}
+        {#                                                <a href="compare.html" target="_blank"><i#}
+        {#                                                        class="ti-stats-up"></i></a>#}
+        {#                                            </div>#}
+        {#                                        </form>#}
+        {##}
+        {#                                        <div class="share_wf mt-30">#}
+        {#                                            <p>Share With Friend</p>#}
+        {#                                            <div class="_icon">#}
+        {#                                                <a href="#"><i class="fa fa-facebook"#}
+        {#                                                               aria-hidden="true"></i></a>#}
+        {#                                                <a href="#"><i class="fa fa-twitter"#}
+        {#                                                               aria-hidden="true"></i></a>#}
+        {#                                                <a href="#"><i class="fa fa-pinterest"#}
+        {#                                                               aria-hidden="true"></i></a>#}
+        {#                                                <a href="#"><i class="fa fa-google-plus"#}
+        {#                                                               aria-hidden="true"></i></a>#}
+        {#                                            </div>#}
+        {#                                        </div>#}
+        {#                                    </div>#}
+        {#                                </div>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        </div>#}
+        <!-- ****** Quick View Modal Area End ****** -->
+
+        <section class="shop_grid_area section_padding_100">
+            <div class="container">
+                <div class="row">
+                    {% render_partial "sidebar" %}
+
+                    <div class="col-12 col-md-8 col-lg-9">
+                        <div class="shop_grid_product_area">
+                            <div class="row">
+
+                                <!-- Single gallery Item -->
+                                {% for product in page_obj %}
+
+                                    <div data-filter="{{ product.price_after_off }}"
+                                         class="filter
+                                                 {% for size in product.sizes.all %}{{ size.size }} {% endfor %} col-12 col-sm-6 col-lg-4 single_gallery_item wow fadeInUpBig"
+                                         data-wow-delay="0.2s"
+                                         style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUpBig;">
+                                        <!-- Product Image -->
+                                        <div style="height: 439px;width: 304px" class="product-img">
+                                            {% if product.image1.width > product.image1.height %}
+                                                <a href="{{ product.get_absolute_url }}"><img
+                                                        style="margin-top: 50%;width: 90%;background-position: center"
+                                                        src="{{ product.image1.url }}"
+                                                        alt="{{ product.title }}"></a>
+                                            {% else %}
+                                                <a href="{{ product.get_absolute_url }}"><img style="background-position: center"
+                                                        src="{{ product.image1.url }}"
+                                                        alt="{{ product.title }}"></a>
+                                            {% endif %}
+                                        </div>
+                                        <!-- Product Description -->
+                                        <div class="product-description">
+                                            {% if product.off_percentage %}
+                                                <h4 class="product-price"><strike>${{ product.price }}</strike>
+                                                    | OFF
+                                                </h4>
+                                            {% else %}
+                                                <h4 class="product-price">${{ product.price }}</h4>
+                                            {% endif %}
+                                            <p>{{ product.title }}</p>
+                                            <!-- Add to Cart -->
+                                            <a href="{{ product.get_absolute_url }}" class="add-to-cart-btn">SHOW
+                                                DETAIL</a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="shop_pagination_area wow fadeInUp" data-wow-delay="1.1s"
+                             style="visibility: hidden; animation-delay: 1.1s; animation-name: none;">
+                            <nav aria-label="Page navigation">
+                                {% if is_paginated %}
+                                    <ul class="pagination pagination-sm">
+
+                                        {% for i in page_obj.paginator.page_range %}
+                                            {% if page_obj.number == i %}
+                                                <li class="page-item active"><a class="page-link"
+                                                                                href="?page={{ i }}">{{ i }}</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link"
+                                                                         href="?page={{ i }}">{{ i }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </ul>
+                                {% endif %}
+                            </nav>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ****** Footer Area Start ****** -->
+        {% render_partial "footer" %}
+        <!-- ****** Footer Area End ****** -->
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+
+            $(".filter-button").click(function () {
+                var value = $(this).attr('data-filter');
+
+                if (value === "all") {
+                    //$('.filter').removeClass('hidden');
+                    $('.filter').show('1000');
+                } else {
+//            $('.filter[filter-item="'+value+'"]').removeClass('hidden');
+//            $(".filter").not('.filter[filter-item="'+value+'"]').addClass('hidden');
+                    $(".filter").not('.' + value).hide('3000');
+                    $('.filter').filter('.' + value).show('3000');
+
+                }
+            });
+
+            if ($(".filter-button").removeClass("active")) {
+                $(this).removeClass("active");
+            }
+            $(this).addClass("active");
+
+        });
+    </script>
+{% endblock %}

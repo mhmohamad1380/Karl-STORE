@@ -1,0 +1,116 @@
+{% load static %}
+<!-- ****** Header Area Start ****** -->
+<header class="header_area">
+    <!-- Top Header Area Start -->
+    <div class="top_header_area">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center justify-content-end">
+
+                <div class="col-12 col-lg-7">
+                    <div class="top_single_area d-flex align-items-center">
+                        <!-- Logo Area -->
+                        <div class="top_logo">
+                            <a href="#"><img src="{% static "img/core-img/logo.png" %}" alt=""></a>
+                        </div>
+                        <!-- Cart & Menu Area -->
+                        <div class="header-cart-menu d-flex align-items-center ml-auto">
+                            <!-- Cart Area -->
+                            <div class="cart">
+                                <a href="#" id="header-cart-btn" target="_blank"><span
+                                        class="cart_quantity">{{ count }}</span> <i class="ti-bag"></i> Your Bag ${{ total_price }}</a>
+                                <!-- Cart List Area Start -->
+                                <ul class="cart-list">
+                                    {% for order in orders %}
+                                        <li>
+                                            <a href="#" class="image"><img
+                                                    src="{{ order.products.image1.url }}"
+                                                    class="cart-thumb" alt="{{ order.products.title }}"></a>
+                                            <div class="cart-item-desc">
+                                                <h6><a href="/shop/Dress/{{ order.products.id }}">{{ order.products.title }}</a></h6>
+                                                <p>{{ order.count }}x - <span class="price">${{ order.final_price }}</span></p>
+                                            </div>
+                                            <span class="dropdown-product-remove"><i class="icon-cross"></i></span>
+                                        </li>
+                                    {% endfor %}
+                                    <li class="total">
+                                        <span class="pull-right">Total: ${{ total_price }}</span>
+                                        <a href="/cart" class="btn btn-sm btn-cart">Cart</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Header Area End -->
+    <div class="main_header_area">
+        <div class="container h-100">
+            <div class="row h-100">
+                <div class="col-12 d-md-flex justify-content-between">
+                    <!-- Header Social Area -->
+                    <div class="header-social-area">
+                        {% for social in settings.accounts.all %}
+                            <a target="_blank" href="{{ social.url }}"><i class="fa fa-{{ social.icon }}"
+                                                                          aria-hidden="true"></i></a>
+                        {% endfor %}
+                    </div>
+                    <!-- Menu Area -->
+                    <div class="main-menu-area">
+                        <nav class="navbar navbar-expand-lg align-items-start">
+
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                    data-target="#karl-navbar" aria-controls="karl-navbar" aria-expanded="false"
+                                    aria-label="Toggle navigation"><span class="navbar-toggler-icon"><i
+                                    class="ti-menu"></i></span></button>
+
+                            <div class="collapse navbar-collapse align-items-start collapse" id="karl-navbar">
+                                <ul class="navbar-nav animated" id="nav">
+                                    <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+                                    <li class="nav-item active"><a class="nav-link" href="/shop">Shop</a></li>
+                                    <li class="nav-item active"><a class="nav-link" href="/cart">Cart</a></li>
+
+                                    </li>
+                                    {% if request.user.is_authenticated %}
+                                        <li class="nav-item active"><a class="nav-link" href="/user/logout">Logout</a>
+                                            {% else %}
+                                        <li class="nav-item active"><a class="nav-link" href="/user/login">Login</a>
+                                        <li class="nav-item active">
+                                        <a class="nav-link" href="/user/register">Register</a>
+                                    {% endif %}
+
+                                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                    <!-- Help Line -->
+                    <div class="help-line">
+                        <a href="tel:+346573556778"><i class="ti-headphone-alt"></i> {{ settings.phone_number }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<section class="top-discount-area d-md-flex align-items-center">
+    <!-- Single Discount Area -->
+    {% for offer in settings.offers.all %}
+        <div class="single-discount-area">
+            <h5>{{ offer.title }}</h5>
+            {% if offer.link and not offer.description %}
+                <h6><a href="{{ offer.link }}">Buy Now</a></h6>
+            {% elif offer.description and not offer.link %}
+                <h6>{{ offer.description }}</h6>
+
+            {% elif offer.link and offer.description %}
+                <h6><a href="{{ offer.link }}">Buy Now</a></h6>
+                <h6>{{ offer.description }}</h6>
+            {% endif %}
+        </div>
+    {% endfor %}
+</section>
+<!-- ****** Header Area End ****** -->

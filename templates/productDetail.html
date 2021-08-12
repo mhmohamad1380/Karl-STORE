@@ -1,0 +1,252 @@
+{% extends 'base/_MainLayout.html' %}
+{% load render_partial %}
+{% load static %}
+{% block title %}
+    {{ product.title }}
+{% endblock %}
+{% block content %}
+    <div id="wrapper">
+
+        <!-- ****** Header Area Start ****** -->
+        {% render_partial "header" %}
+        <!-- ****** Header Area End ****** -->
+
+
+        <!-- <<<<<<<<<<<<<<<<<<<< Breadcumb Area Start <<<<<<<<<<<<<<<<<<<< -->
+        <div class="breadcumb_area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <ol class="breadcrumb d-flex align-items-center">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+                            <li class="breadcrumb-item active">{{ product.title }}</li>
+                        </ol>
+                        <!-- btn -->
+                        <div>
+                            <a href="/shop" class="backToHome d-block"><i class="fa fa-angle-double-left"></i> Back to
+                                Shop</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <<<<<<<<<<<<<<<<<<<< Breadcumb Area End <<<<<<<<<<<<<<<<<<<< -->
+
+        <!-- <<<<<<<<<<<<<<<<<<<< Single Product Details Area Start >>>>>>>>>>>>>>>>>>>>>>>>> -->
+        <section class="single_product_details_area section_padding_0_100">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-12 col-md-6">
+                        <div class="single_product_thumb">
+                            <div id="product_details_slider" class="carousel slide" data-ride="carousel">
+
+                                <ol style="height: 8vh" class="carousel-indicators">
+                                    <li class="" data-target="#product_details_slider" data-slide-to="0"
+                                        style="background-image: url({{ product.image1.url }});">
+                                    </li>
+                                    {% if product.image2 %}
+                                        <li data-target="#product_details_slider" data-slide-to="1"
+                                            style="background-image: url({{ product.image2.url }});" class="active">
+                                        </li>
+                                    {% endif %}
+                                    {% if product.image3 %}
+                                        <li data-target="#product_details_slider" data-slide-to="2"
+                                            style="background-image: url({{ product.image3.url }});">
+                                        </li>
+                                    {% endif %}
+                                    {% if product.image4 %}
+                                        <li data-target="#product_details_slider" data-slide-to="3"
+                                            style="background-image: url({{ product.image4.url }});">
+                                        </li>
+                                    {% endif %}
+                                </ol>
+
+                                <div class="carousel-inner">
+                                    <div style="height: {{ product.image1.height }}" class="carousel-item">
+                                        <a class="gallery_img" href="{{ product.image1.url }}">
+                                            <img class="d-block w-100" src="{{ product.image1.url }}" alt="First slide">
+                                        </a>
+                                    </div>
+                                    {% if product.image2 %}
+                                        <div style="height: {{ product.image2.height }}" class="carousel-item active">
+                                            <a class="gallery_img" href="{{ product.image2.url }}">
+                                                <img class="d-block w-100" src="{{ product.image2.url }}"
+                                                     alt="Second slide">
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                    {% if product.image3 %}
+                                        <div style="height: {{ product.image3.height }}" class="carousel-item">
+                                            <a class="gallery_img" href="{{ product.image3.url }}">
+                                                <img class="d-block w-100" src="{{ product.image3.url }}"
+                                                     alt="Third slide">
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                    {% if product.image4 %}
+                                        <div style="height: {{ product.image4.height }}" class="carousel-item">
+                                            <a class="gallery_img" href="{{ product.image4.url }}">
+                                                <img class="d-block w-100" src="{{ product.image4.url }}"
+                                                     alt="Fourth slide">
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="single_product_desc">
+
+
+                            {% if product.is_available == 1 %}
+                                {% if product.off_percentage > 0 %}
+                                    <h4 class="title"><a href="/shop/{{ product.get_absolute_url }}">{{ product.title }}
+                                        | {{ product.off_percentage }}% OFF</a></h4>
+                                    <h4 class="price">$ {{ price_off }} | <strike>$ {{ product.price }}</strike></h4>
+                                {% else %}
+                                    <h4 class="title"><a
+                                            href="/shop/{{ product.get_absolute_url }}">{{ product.title }}</a></h4>
+                                    <h4 class="price">$ {{ product.price }}</h4>
+                                {% endif %}
+                                <p class="available">Available: <span style="color: green"
+                                                                      class="text-muted">In Stock</span></p>
+                                <span class="text-muted">Available Count : {{ product.count }}</span>
+                                <hr>
+
+                                {% if not product in order_list %}
+                                    <!-- Add to Cart Form -->
+
+                                    <form action="/shop/{{ product.get_absolute_url }}" class="cart clearfix mb-50 "
+                                          method="post">
+                                        {% csrf_token %}
+                                        {% if not size_count == 0 %}
+                                            <div class="widget size mb-50">
+                                                <h6 class="widget-title">Size</h6>
+                                                <div class="widget-desc">
+
+                                                    <ul>
+
+                                                        <select name="sizes" id="sizes">
+                                                            {% for size in sizes %}
+                                                                <option value="{{ size.size }}">{{ size.size }}</option>
+                                                            {% endfor %}
+                                                        </select>
+
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <div class="quantity">
+                                    <span class="qty-minus"
+                                          onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty > 1 ) effect.value--;return false;"><i
+                                            class="fa fa-minus" aria-hidden="true"></i></span>
+                                            <input readonly type="number" class="qty-text" id="qty" step="1" min="1" max="{{ product.count }}"
+                                                   name="quantity" value="1">
+                                            <span class="qty-plus"
+                                                  onclick="if (document.getElementById('qty').value < {{ product.count }}){var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;}else{
+                                                                    document.getElementById('qty').value = {{ product.count }}
+                                                                    }"><i
+                                                    class="fa fa-plus" aria-hidden="true"></i></span>
+                                        </div>
+                                        <div class="d-flex">
+                                            <button type="submit" name="addtocart" class="btn cart-submit d-block">Add
+                                                to
+                                                cart
+                                            </button>
+                                        </div>
+                                    </form>
+                                    {% else %}
+                                    <span class="badge badge-info"> exists in Cart</span>
+                                    <br>
+                                {% endif %}
+
+                            {% else %}
+                                <h4 class="title"><a href="/shop/{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                </h4>
+                                <p class="text-danger">Available: <span style="color: red"
+                                                                        class="text-muted text-danger"> Not In Stock</span>
+                                </p>
+                            {% endif %}
+
+
+                            <div id="accordion" role="tablist">
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="headingOne">
+                                        <h6 class="mb-0">
+                                            <a data-toggle="collapse" href="#collapseOne" aria-expanded="true"
+                                               aria-controls="collapseOne">Information</a>
+                                        </h6>
+                                    </div>
+
+                                    <div id="collapseOne" class="collapse show" role="tabpanel"
+                                         aria-labelledby="headingOne" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra
+                                                tempor so dales. Phasellus sagittis auctor gravida. Integ er bibendum
+                                                sodales arcu id te mpus. Ut consectetur lacus.</p>
+                                            <p>Approx length 66cm/26" (Based on a UK size 8 sample) Mixed fibres</p>
+                                            <p>The Model wears a UK size 8/ EU size 36/ US size 4 and her height is
+                                                5'8"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="headingTwo">
+                                        <h6 class="mb-0">
+                                            <a class="collapsed" data-toggle="collapse" href="#collapseTwo"
+                                               aria-expanded="false" aria-controls="collapseTwo">Cart Details</a>
+                                        </h6>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo"
+                                         data-parent="#accordion">
+                                        <div class="card-body">
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo quis
+                                                in veritatis officia inventore, tempore provident dignissimos nemo,
+                                                nulla quaerat. Quibusdam non, eos, voluptatem reprehenderit hic nam!
+                                                Laboriosam, sapiente! Praesentium.</p>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia magnam
+                                                laborum eaque.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" role="tab" id="headingThree">
+                                        <h6 class="mb-0">
+                                            <a class="collapsed" data-toggle="collapse" href="#collapseThree"
+                                               aria-expanded="false" aria-controls="collapseThree">shipping &amp;
+                                                Returns</a>
+                                        </h6>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" role="tabpanel"
+                                         aria-labelledby="headingThree" data-parent="#accordion">
+                                        <div class="card-body">
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse quo sint
+                                                repudiandae suscipit ab soluta delectus voluptate, vero vitae, tempore
+                                                maxime rerum iste dolorem mollitia perferendis distinctio. Quibusdam
+                                                laboriosam rerum distinctio. Repudiandae fugit odit, sequi id!</p>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae qui
+                                                maxime consequatur laudantium temporibus ad et. A optio inventore
+                                                deleniti ipsa.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {% render_partial "related" %}
+
+        <!-- ****** Footer Area Start ****** -->
+        {% render_partial "footer" %}
+        <!-- ****** Footer Area End ****** -->
+    </div>
+{% endblock %}
