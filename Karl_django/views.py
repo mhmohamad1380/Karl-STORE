@@ -3,6 +3,7 @@ import json
 
 import requests
 from azbankgateways import bankfactories
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 
@@ -10,7 +11,7 @@ from Karl_Shop.models import HeaderSetting, ShopItems, Category, HomePageOffers,
 
 from azbankgateways import bankfactories, models as bank_models, default_settings as settings
 
-
+@login_required(login_url='/user/login')
 def homepage(request):
     offers: HomePageOffers = HomePageOffers.objects.all()
     more_off = ShopItems.objects.all()
@@ -25,11 +26,14 @@ def homepage(request):
     context = {
         'items': mygrouper(6, items),
         'categories': categories,
-        'more_off': more_off.order_by('-off_percentage')[0],
-        'more_count': more_off.order_by('-count')[0],
+        'more_off': None,
+        'more_count': None,
         'offers': offers
     }
-
+    if ShopItems.objects.all() is not None:
+        print(more_off)
+        context['more_off'] = more_off.order_by('-off_percentage')[0]
+        context['more_count'] = more_off.order_by('-count')[0]
     return render(request, 'index.html', context)
 
 
